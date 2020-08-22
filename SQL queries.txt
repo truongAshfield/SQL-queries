@@ -1,0 +1,60 @@
+/*Query 1 - first insight*/
+SELECT Invoice.BillingCountry Country,
+		count(InvoiceLine.Quantity) volume
+		FROM Invoice
+		JOIN InvoiceLine
+		ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+		GROUP BY 1
+		ORDER BY 2 DESC
+		LIMIT 10;
+
+/*Query 2 - second insight*/
+SELECT GENRE.Name genre_name,
+	count(*) genre_count
+		FROM Genre
+		JOIN Track
+		ON genre.GenreId = track.GenreId
+		JOIN InvoiceLine
+		ON InvoiceLine.TrackId = Track.TrackId
+		JOIN Invoice
+		ON invoice.InvoiceId = InvoiceLine.InvoiceId
+		WHERE invoice.BillingCountry = 'USA'
+		GROUP BY 1
+		ORDER BY 2 DESC;
+
+/*Query 3 - third insight*/
+SELECT Artist.Name artist_name,
+	count(*) number_track_sold
+		FROM Invoice
+		JOIN InvoiceLine
+		ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+		JOIN Track
+		ON InvoiceLine.TrackId = Track.TrackId
+		JOIN Genre
+		ON Track.GenreId = Genre.GenreId
+		JOIN Album
+		ON Track.AlbumId = Album.AlbumId
+		JOIN Artist
+		ON Album.ArtistId = Artist.ArtistId
+		WHERE Invoice.BillingCountry = 'USA' AND Genre.Name = 'Rock'
+		GROUP BY 1
+		ORDER BY 2 DESC
+		LIMIT 10;
+
+/*Query 4 - fourth insight*/
+SELECT Album.Title,
+	count(*) number_album
+		FROM Genre
+		JOIN Track
+		ON genre.GenreId = track.GenreId
+		JOIN InvoiceLine
+		ON InvoiceLine.TrackId = Track.TrackId
+		JOIN Invoice
+		ON invoice.InvoiceId = InvoiceLine.InvoiceId
+		JOIN Album
+		ON Album.AlbumId = Track.AlbumId
+		JOIN Artist
+		ON Artist.ArtistId = Album.ArtistId
+		WHERE invoice.BillingCountry = 'USA' AND Genre.Name = 'Rock' AND Artist.Name = 'U2'
+		GROUP BY 1
+		ORDER BY 2 DESC;
